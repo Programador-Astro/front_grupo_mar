@@ -1,0 +1,42 @@
+.navbar {
+  position: sticky; /* Ou 'fixed' se você quiser que ela fique sempre visível */
+  top: 0;
+  width: 90%;
+  z-index: 100;
+  height: 100px;
+  background-color: #007bff00;
+  padding: 16px;
+  color: white;
+}
+
+.navbar-container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu li a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar-menu li a:hover {
+  color: #e0e0e0;
+}
