@@ -21,7 +21,7 @@ export default function CadastroVeiculo() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:5000/logistica/veiculos", formData)
+    axios.post("https://gestor-docker.onrender.com/logistica/veiculos", formData)
       .then(() => alert("Veículo cadastrado com sucesso!"))
       .catch(() => alert("Erro ao cadastrar veículo"));
   };
