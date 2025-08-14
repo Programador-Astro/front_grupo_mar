@@ -1,16 +1,26 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true,      
+    host: true,
     port: 5173,
+    allowedHosts: ['gestor-docker-1.onrender.com'],
     watch: {
       usePolling: true
     },
-    allowedHosts: ['gestor-docker-1.onrender.com'] 
+    // Configuração do proxy ajustada para não precisar do prefixo '/api'
+    proxy: {
+      // Agora, requisições para '/auth' serão redirecionadas diretamente
+      // para o seu back-end Flask. Adicione outras rotas do seu back-end aqui,
+      // se necessário (por exemplo: '/users', '/products', etc.).
+      '/auth': {
+        target: 'https://gestor-docker.onrender.com',
+        changeOrigin: true
+      }
+    }
   },
   build: {
     outDir: 'dist'
