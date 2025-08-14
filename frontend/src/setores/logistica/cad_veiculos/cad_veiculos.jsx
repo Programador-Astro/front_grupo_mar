@@ -20,7 +20,15 @@ export default function CadastroVeiculo() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    // Pega o token do localStorage
+      const token = localStorage.getItem('token');
+    
+      // Adiciona o token ao cabeçalho da requisição
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
     axios.post("https://gestor-docker.onrender.com/logistica/veiculos", formData)
       .then(() => alert("Veículo cadastrado com sucesso!"))
       .catch(() => alert("Erro ao cadastrar veículo"));
