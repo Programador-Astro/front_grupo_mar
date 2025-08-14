@@ -29,7 +29,7 @@ export default function CadastroVeiculo() {
           Authorization: `Bearer ${token}`
         }
       };
-    axios.post("https://gestor-docker.onrender.com/logistica/veiculos", formData)
+    axios.post("https://gestor-docker.onrender.com/logistica/veiculos", formData, config)
       .then(() => alert("Veículo cadastrado com sucesso!"))
       .catch(() => alert("Erro ao cadastrar veículo"));
   };
