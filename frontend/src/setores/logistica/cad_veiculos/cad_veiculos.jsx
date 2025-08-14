@@ -7,7 +7,8 @@ export default function CadastroVeiculo() {
     placa: "",
     modelo: "",
     ano: "",
-    capacidade: ""
+    capacidade: "",
+    km_atual: "",
   });
 
   const handleChange = (e) => {
@@ -71,7 +72,16 @@ export default function CadastroVeiculo() {
             required
           />
         </FormGroup>
-
+        <FormGroup>
+          <Label>Km</Label>
+          <Input
+            type="number"
+            name="km_atual"
+            value={formData.km_atual}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
         <FormGroup>
           <Label>Capacidade</Label>
           <Input
