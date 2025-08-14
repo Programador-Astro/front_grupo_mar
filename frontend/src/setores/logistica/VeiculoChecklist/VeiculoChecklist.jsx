@@ -19,7 +19,7 @@
           }
         };
         axios
-        .get(`http://localhost:5000/logistica/checklist/${placa}`,config)
+        .get(`https://gestor-docker.onrender.com/logistica/checklist/${placa}`,config)
         .then((res) => {
           const sorted = res.data.sort(
             (a, b) => new Date(b.data) - new Date(a.data)
@@ -85,7 +85,7 @@
                       
                       <img
                         key={index}
-                        src={`http://localhost:5000${foto.url}`}
+                        src={`https://gestor-docker.onrender.com/${foto.url}`}
                         alt={foto.nome}
                         style={{
                           width: "100px",
