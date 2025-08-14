@@ -16,9 +16,10 @@ export default defineConfig({
       // para o seu back-end Flask. Adicione outras rotas do seu back-end aqui,
       // se necessário (por exemplo: '/users', '/products', etc.).
       '/auth': {
-        target: 'http://localhost:5000',
+        target: 'https://gestor-docker.onrender.com',
         changeOrigin: true
-      }
+      },
+      allowedHosts: ['gestor-docker-1.onrender.com'],
     }
   },
   build: {
