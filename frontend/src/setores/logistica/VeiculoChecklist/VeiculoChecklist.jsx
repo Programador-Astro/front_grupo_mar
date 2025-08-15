@@ -59,6 +59,9 @@
                 }}
               >
                 <p style={{ margin: "5px 0" }}>
+                  <strong>Autor:</strong> {c.autor}
+                </p>
+                <p style={{ margin: "5px 0" }}>
                   <strong>Data:</strong> {c.data}
                 </p>
                 <p style={{ margin: "5px 0" }}>
