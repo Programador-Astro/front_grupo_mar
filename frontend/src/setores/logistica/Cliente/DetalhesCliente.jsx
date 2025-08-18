@@ -77,6 +77,11 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
 `;
 
 const Input = styled.input`
@@ -91,12 +96,14 @@ export default function DetalhesCliente() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [showPedidoForm, setShowPedidoForm] = useState(false);
   const [newAddress, setNewAddress] = useState({
     endereco: "",
     numero: "",
     ponto_ref: "",
     obs: "",
   });
+  const [pdfPedido, setPdfPedido] = useState(null);
   const navigate = useNavigate();
 
   const fetchCliente = async () => {
@@ -145,7 +152,6 @@ export default function DetalhesCliente() {
     setMessage({ text: "", type: "" });
     const token = localStorage.getItem("token");
 
-    // Verifica se o código do cliente está disponível na URL
     if (!codigo_cliente) {
       setMessage({ text: "Erro: O código do cliente não foi encontrado na URL.", type: "error" });
       return;
@@ -175,9 +181,52 @@ export default function DetalhesCliente() {
         ponto_ref: "",
         obs: "",
       });
-      fetchCliente(); // Recarrega os dados do cliente para exibir o novo endereço
+      fetchCliente();
     } catch (error) {
       const msg = error.response?.data?.erro || "Erro ao salvar o endereço.";
+      setMessage({ text: `Erro: ${msg}`, type: "error" });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setPdfPedido(e.target.files[0]);
+  };
+
+  const handleSavePedido = async (e) => {
+    e.preventDefault();
+    setMessage({ text: "", type: "" });
+    
+    if (!pdfPedido) {
+      setMessage({ text: "Por favor, selecione um arquivo PDF.", type: "error" });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("pdf_pedido", pdfPedido);
+    formData.append("endereco_adm", "1"); // Valor fixo conforme solicitado
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage({ text: "Erro: Token de autenticação não encontrado.", type: "error" });
+      return;
+    }
+
+    try {
+      await axios.post(
+        "https://gestor-docker.onrender.com/logistica/cadastrar_pedido",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          }
+        }
+      );
+      setMessage({ text: "Pedido cadastrado com sucesso!", type: "success" });
+      setShowPedidoForm(false);
+      setPdfPedido(null);
+    } catch (error) {
+      const msg = error.response?.data?.erro || "Erro ao cadastrar o pedido.";
       setMessage({ text: `Erro: ${msg}`, type: "error" });
     }
   };
@@ -240,6 +289,32 @@ export default function DetalhesCliente() {
               ))
             ) : (
               <p>Nenhum endereço administrativo cadastrado.</p>
+            )}
+
+            {/* Botão para mostrar/esconder o formulário de pedido */}
+            {!showPedidoForm && (
+              <Button onClick={() => setShowPedidoForm(true)}>Cadastrar Pedido</Button>
+            )}
+
+            {/* Formulário para cadastrar pedido */}
+            {showPedidoForm && (
+              <Form onSubmit={handleSavePedido}>
+                <Label>ID do Endereço Administrativo:</Label>
+                <Value>1 (valor fixo para teste)</Value>
+
+                <Label>Anexar PDF do Pedido:</Label>
+                <Input
+                  type="file"
+                  name="pdf_pedido"
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <Button type="submit">Salvar Pedido</Button>
+                  <Button type="button" onClick={() => setShowPedidoForm(false)}>Cancelar</Button>
+                </div>
+              </Form>
             )}
           </Section>
 
