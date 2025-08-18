@@ -21,7 +21,7 @@ export default function Checklist() {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    axios.get("http://localhost:5000/logistica/veiculos", config)
+    axios.get("https://gestor-docker.onrender.com/logistica/veiculos", config)
       .then(res => setPlacas(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -41,7 +41,7 @@ export default function Checklist() {
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
 
-    const url = `http://localhost:5000/logistica/checklist/${formData.placa}`;
+    const url = `https://gestor-docker.onrender.com/logistica/checklist/${formData.placa}`;
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",

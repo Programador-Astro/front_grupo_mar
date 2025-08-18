@@ -15,7 +15,7 @@ const Navbar = () => {
 
           <li><Link to="/logistica/estoque">Estoque</Link></li>
           <li><Link to="/logistica/pedido">Pedidos</Link></li>
-          <li><Link to="/logistica/cliente">Clientes</Link></li>
+          <li><Link to="/logistica/clientes">Clientes</Link></li>
         </ul>
       </div>
     </nav>

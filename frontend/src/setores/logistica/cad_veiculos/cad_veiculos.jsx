@@ -7,7 +7,8 @@ export default function CadastroVeiculo() {
     placa: "",
     modelo: "",
     ano: "",
-    capacidade: ""
+    capacidade: "",
+    km_atual: "",
   });
 
   const handleChange = (e) => {
@@ -20,8 +21,16 @@ export default function CadastroVeiculo() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    axios.post("http://localhost:5000/logistica/veiculos", formData)
+    // Pega o token do localStorage
+      const token = localStorage.getItem('token');
+    
+      // Adiciona o token ao cabeçalho da requisição
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+    axios.post("https://gestor-docker.onrender.com/logistica/veiculos", formData, config)
       .then(() => alert("Veículo cadastrado com sucesso!"))
       .catch(() => alert("Erro ao cadastrar veículo"));
   };
@@ -59,6 +68,17 @@ export default function CadastroVeiculo() {
             type="number"
             name="ano"
             value={formData.ano}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        
+        <FormGroup>
+          <Label>Km</Label>
+          <Input
+            type="number"
+            name="km_atual"
+            value={formData.km_atual}
             onChange={handleChange}
             required
           />

@@ -15,7 +15,7 @@ export default function ChecklistDetalhe() {
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
     axios
-      .get(`http://localhost:5000/logistica/get_img/${id}`, config)
+      .get(`https://gestor-docker.onrender.com/logistica/get_img/${id}`, config)
       .then((res) => {
         setChecklist(res.data);
         setLoading(false);
@@ -66,7 +66,7 @@ export default function ChecklistDetalhe() {
             {checklist.fotos.map((foto, index) => (
               <img
                 key={index}
-                src={`http://localhost:5000${foto.url}`}
+                src={`https://gestor-docker.onrender.com${foto.url}`}
                 alt={foto.nome}
                 style={{
                   width: "120px",
