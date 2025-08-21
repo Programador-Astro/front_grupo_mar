@@ -118,7 +118,7 @@ export default function DetalhesCliente() {
     }
 
     try {
-      const response = await axios.get(`https://gestor-docker.onrender.com/logistica/get_cliente/${codigo_cliente}`, {
+      const response = await axios.get(`http://localhost:5000/logistica/get_cliente/${codigo_cliente}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -164,7 +164,7 @@ export default function DetalhesCliente() {
 
     try {
       await axios.post(
-        "https://gestor-docker.onrender.com/logistica/cadastrar_endeco_motorista",
+        "http://localhost:5000/logistica/cadastrar_endeco_motorista",
         { ...newAddress, codigo_externo: codigo_cliente },
         { 
           headers: {
@@ -213,8 +213,9 @@ export default function DetalhesCliente() {
 
     try {
       await axios.post(
-        "https://gestor-docker.onrender.com/logistica/cadastrar_pedido",
+        "http://localhost:5000/logistica/cadastrar_pedido",
         formData,
+      
         {
           headers: {
             Authorization: `Bearer ${token}`,

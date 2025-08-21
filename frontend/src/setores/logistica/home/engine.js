@@ -1,5 +1,5 @@
 export async function loginUser(email, pwd) {
-  const resposta = await fetch('https://gestor-docker.onrender.com/auth/login', {
+  const resposta = await fetch('http://localhost:5000/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

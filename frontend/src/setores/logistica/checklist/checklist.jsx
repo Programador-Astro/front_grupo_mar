@@ -11,127 +11,221 @@ export default function Checklist() {
     km: "",
     temperatura: "",
     combustivel: "",
+    obs: "",
     fotoFrontal: null,
     fotoTraseira: null,
     fotoLateral1: null,
-    fotoLateral2: null
+    fotoLateral2: null,
   });
+  const [previews, setPreviews] = useState({});
+  const [fotosAdicionais, setFotosAdicionais] = useState([]);
+  const [previewAdicionais, setPreviewAdicionais] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    axios.get("https://gestor-docker.onrender.com/logistica/veiculos", config)
-      .then(res => setPlacas(res.data))
-      .catch(err => console.error(err));
+    axios
+      .get("http://localhost:5000/logistica/veiculos", config)
+      .then((res) => setPlacas(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value
-    });
+    const { name, files, value } = e.target;
+    if (files) {
+      const file = files[0];
+      setFormData({ ...formData, [name]: file });
+      setPreviews({ ...previews, [name]: URL.createObjectURL(file) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const token = localStorage.getItem('token');
+  const handleFotosAdicionais = (e) => {
+    const files = Array.from(e.target.files);
+    setFotosAdicionais([...fotosAdicionais, ...files]);
+    const novosPreviews = files.map((file) => URL.createObjectURL(file));
+    setPreviewAdicionais([...previewAdicionais, ...novosPreviews]);
+  };
+
+  const token = localStorage.getItem("token");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
 
-    const url = `https://gestor-docker.onrender.com/logistica/checklist/${formData.placa}`;
+    fotosAdicionais.forEach((foto, index) =>
+      data.append(`fotoAdicional_${index + 1}`, foto)
+    );
+
+    const url = `http://localhost:5000/logistica/checklist/${formData.placa}`;
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true
+        Authorization: `Bearer ${token}`,
+      }
     };
 
-    axios.post(url, data, config)
+    axios
+      .post(url, data, config)
       .then(() => {
         console.log("Checklist enviado com sucesso!");
-          navigate("/logistica/veiculos"); // Redireciona para a tela de veículos
+        navigate("/logistica/veiculos");
       })
       .catch(() => console.error("Erro ao enviar checklist"));
   };
 
   return (
-    <Container>
-      <Title>Checklist de Veículos</Title>
-      <form onSubmit={handleSubmit}>
+    <Container style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
+      <Title style={{ fontSize: "1.5rem", textAlign: "center", marginBottom: "1rem" }}>
+        Checklist de Veículos
+      </Title>
+
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {/* Seleção da placa */}
         <FormGroup>
-          <Label>Placa</Label>
-          <Input as="select" name="placa" value={formData.placa} onChange={handleChange} required>
+          <Label style={{ fontWeight: "600" }}>Placa</Label>
+          <Input
+            as="select"
+            name="placa"
+            value={formData.placa}
+            onChange={handleChange}
+            required
+            style={{ padding: "0.8rem", borderRadius: "8px", fontSize: "1rem" }}
+          >
             <option value="">Selecione</option>
             {placas.map((p, index) => (
-              <option key={index} value={p}>{p}</option>
+              <option key={index} value={p}>
+                {p}
+              </option>
             ))}
           </Input>
         </FormGroup>
 
-        <FormGroup>
-          <Label>KM</Label>
-          <Input type="number" name="km" value={formData.km} onChange={handleChange} required />
-        </FormGroup>
+        {/* Campos de texto */}
+        {[
+          { label: "KM", name: "km", type: "number" },
+          { label: "Temperatura", name: "temperatura", type: "number" },
+          { label: "Nível de Combustível (%)", name: "combustivel", type: "number" },
+        ].map((field, idx) => (
+          <FormGroup key={idx}>
+            <Label style={{ fontWeight: "600" }}>{field.label}</Label>
+            <Input
+              type={field.type}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              required
+              style={{ padding: "0.8rem", borderRadius: "8px", fontSize: "1rem" }}
+            />
+          </FormGroup>
+        ))}
 
+        {/* Observações */}
         <FormGroup>
-          <Label>Temperatura</Label>
-          <Input type="number" name="temperatura" value={formData.temperatura} onChange={handleChange} required />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Nível de Combustível (%)</Label>
-          <Input type="number" name="combustivel" value={formData.combustivel} onChange={handleChange} required />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Foto Frontal</Label>
-          <FileInput
-            type="file"
-            name="fotoFrontal"
-            accept=".png, .jpg, .jpeg"
+          <Label style={{ fontWeight: "600" }}>Observações</Label>
+          <textarea
+            name="obs"
+            value={formData.obs}
             onChange={handleChange}
-            required
+            placeholder="Escreva observações adicionais aqui..."
+            rows="4"
+            style={{
+              width: "100%",
+              padding: "0.8rem",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              resize: "none",
+            }}
           />
         </FormGroup>
 
-        <FormGroup>
-          <Label>Foto Traseira</Label>
+        {/* Fotos padrão */}
+        {["fotoFrontal", "fotoTraseira", "fotoLateral1", "fotoLateral2"].map(
+          (field, idx) => (
+            <FormGroup key={idx} style={{ textAlign: "center" }}>
+              <Label style={{ fontWeight: "600" }}>
+                {field.replace("foto", "Foto ")}
+              </Label>
+              <FileInput
+                type="file"
+                name={field}
+                accept="image/*"
+                capture="camera"
+                onChange={handleChange}
+                required
+                style={{ marginTop: "0.5rem" }}
+              />
+              {previews[field] && (
+                <img
+                  src={previews[field]}
+                  alt={field}
+                  style={{
+                    width: "100%",
+                    maxWidth: "300px",
+                    marginTop: "0.5rem",
+                    borderRadius: "10px",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                  }}
+                />
+              )}
+            </FormGroup>
+          )
+        )}
+
+        {/* Fotos adicionais */}
+        <FormGroup style={{ textAlign: "center" }}>
+          <Label style={{ fontWeight: "600" }}>Fotos Adicionais</Label>
           <FileInput
             type="file"
-            name="fotoTraseira"
-            accept=".png, .jpg, .jpeg"
-            onChange={handleChange}
-            required
+            multiple
+            accept="image/*"
+            capture="camera"
+            onChange={handleFotosAdicionais}
+            style={{ marginTop: "0.5rem" }}
           />
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "10px",
+              marginTop: "10px",
+              justifyContent: "center",
+            }}
+          >
+            {previewAdicionais.map((src, index) => (
+              <img
+                key={index}
+                src={src}
+                alt={`fotoAdicional_${index}`}
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                }}
+              />
+            ))}
+          </div>
         </FormGroup>
 
-        <FormGroup>
-          <Label>Foto Lateral 1</Label>
-          <FileInput
-            type="file"
-            name="fotoLateral1"
-            accept=".png, .jpg, .jpeg"
-            onChange={handleChange}
-            required
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Foto Lateral 2</Label>
-          <FileInput
-            type="file"
-            name="fotoLateral2"
-            accept=".png, .jpg, .jpeg"
-            onChange={handleChange}
-            required
-          />
-        </FormGroup>
-
-        <Button type="submit">Enviar Checklist</Button>
+        <Button
+          type="submit"
+          style={{
+            padding: "1rem",
+            fontSize: "1.1rem",
+            borderRadius: "10px",
+            backgroundColor: "#1976d2",
+            color: "#fff",
+            fontWeight: "bold",
+            border: "none",
+          }}
+        >
+          Enviar Checklist
+        </Button>
       </form>
     </Container>
   );

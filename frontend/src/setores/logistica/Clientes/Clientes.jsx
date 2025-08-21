@@ -108,7 +108,7 @@ export default function ExibirListaClientes() {
     }
 
     try {
-      const response = await axios.get("https://gestor-docker.onrender.com/logistica/get_clientes", {
+      const response = await axios.get("http://localhost:5000/logistica/get_clientes", {
         headers: {
           Authorization: `Bearer ${token}`
         }
