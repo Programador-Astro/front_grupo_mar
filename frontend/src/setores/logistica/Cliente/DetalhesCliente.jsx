@@ -164,7 +164,7 @@ export default function DetalhesCliente() {
 
     try {
       await axios.post(
-        "http://localhost:5000/logistica/cadastrar_endeco_motorista",
+        "https://gestor-docker.onrender.com/logistica/cadastrar_endeco_motorista",
         { ...newAddress, codigo_externo: codigo_cliente },
         { 
           headers: {
