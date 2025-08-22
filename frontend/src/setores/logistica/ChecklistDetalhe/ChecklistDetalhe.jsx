@@ -15,7 +15,7 @@ export default function ChecklistDetalhe() {
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
     axios
-      .get(`http://localhost:5000/logistica/get_img/${id}`, config)
+      .get(`https://gestor-docker.onrender.com/logistica/get_img/${id}`, config)
       .then((res) => {
         setChecklist(res.data);
         setLoading(false);
