@@ -26,7 +26,7 @@ export default function Checklist() {
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
     axios
-      .get("http://localhost:5000/logistica/veiculos", config)
+      .get("https://gestor-docker.onrender.com/logistica/veiculos", config)
       .then((res) => setPlacas(res.data))
       .catch((err) => console.error(err));
   }, []);
