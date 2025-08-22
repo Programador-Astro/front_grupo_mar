@@ -101,7 +101,7 @@ export default function ChecklistDetalhe() {
                   }}
                 >
                   <img
-                    src={`http://localhost:5000${foto.url}`}
+                    src={`https://gestor-docker.onrender.com${foto.url}`}
                     alt={foto.nome}
                     style={{
                       width: "150px",
@@ -142,7 +142,7 @@ export default function ChecklistDetalhe() {
                   }}
                 >
                   <img 
-                    src={`http://localhost:5000${foto.url}`} 
+                    src={`https://gestor-docker.onrender.com${foto.url}`} 
                     alt={`Foto Adicional ${index + 1}`}
                     style={{
                       width: "150px",
