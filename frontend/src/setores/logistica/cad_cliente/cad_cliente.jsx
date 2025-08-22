@@ -47,7 +47,7 @@ export default function CadastroCliente() {
     formData.append("pdf_pedido", pdfFile);
 
     try {
-      const response = await axios.post("http://localhost:5000/logistica/cadastrar_cliente", formData, {
+      const response = await axios.post("https://gestor-docker.onrender.com/logistica/cadastrar_cliente", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"
@@ -70,7 +70,7 @@ export default function CadastroCliente() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/logistica/cadastrar_cliente", jsonData, {
+      const response = await axios.post("https://gestor-docker.onrender.com/logistica/cadastrar_cliente", jsonData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
