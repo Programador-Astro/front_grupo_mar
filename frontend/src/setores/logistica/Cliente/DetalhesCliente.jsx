@@ -118,7 +118,7 @@ export default function DetalhesCliente() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:5000/logistica/get_cliente/${codigo_cliente}`, {
+      const response = await axios.get(`https://gestor-docker.onrender.com/logistica/get_cliente/${codigo_cliente}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
