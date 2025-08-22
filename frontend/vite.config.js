@@ -7,13 +7,14 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    allowedHosts: ['localhost'], // 👈 corrigido
+    // Adicione o endereço do seu servidor à lista de hosts permitidos
+    allowedHosts: ['localhost', 'gestor-docker-1.onrender.com'],
     watch: {
       usePolling: true
     },
     proxy: {
       '/auth': {
-        target: 'http://localhost:5000/',
+        target: 'https://gestor-docker.onrender.com/',
         changeOrigin: true
       }
     }
