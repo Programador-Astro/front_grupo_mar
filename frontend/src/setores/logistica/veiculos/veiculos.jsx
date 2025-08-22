@@ -23,7 +23,7 @@ useEffect(() => {
       }
     };
 
-    axios.get("http://localhost:5000/logistica/veiculos", config)
+    axios.get("https://gestor-docker.onrender.com/logistica/veiculos", config)
       .then(res => {
         setVeiculos(res.data);
       })
